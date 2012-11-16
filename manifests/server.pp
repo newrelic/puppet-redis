@@ -102,7 +102,7 @@ define redis::server (
   $zset_max_ziplist_entries    = 128,
   $zset_max_ziplist_value      = 64,
   $activerehashing             = 'yes',
-  $client_output_buffer_limit  = ['normal 0 0 0', 'slave 256mb 64mb 60', 'pubsub 32mb 8mb 60'],
+  $client_output_buffer_limit  = ['normal 0 0 0', 'slave 256mb 64mb 60', 'pubsub 32mb 8mb 60']
 ) {
   include redis::params
 

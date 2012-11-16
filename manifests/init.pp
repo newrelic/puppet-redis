@@ -17,7 +17,7 @@
 # Jonathan Thurman <jthurman@newrelic.com>
 #
 class redis (
-  $version = 'present',
+  $version = 'present'
 ) inherits redis::params {
 
   package { $redis::params::package:
