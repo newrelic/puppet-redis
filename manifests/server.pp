@@ -122,7 +122,7 @@ define redis::server (
     ensure  => 'present',
     owner   => $redis::params::user,
     group   => $redis::params::group,
-    mode    => '0644',
+    mode    => '0640',
     content => template('redis/server.conf.erb'),
     require => Class['redis'],
     notify  => Service["${redis::params::service}-${name}"],

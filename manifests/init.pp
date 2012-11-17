@@ -36,7 +36,7 @@ class redis (
     ensure  => 'present',
     owner   => $redis::params::user,
     group   => $redis::params::group,
-    mode    => '0644',
+    mode    => '0640',
     content => template('redis/redis.conf.erb'),
     require => [Package[$redis::params::package], File[$redis::params::conf_dir]],
   }
