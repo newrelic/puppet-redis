@@ -162,7 +162,7 @@ define redis::server (
   if $nagios_check {
     # Calculate percentages based on either the maxmemory setting or total system memory
     if $maxmemory {
-      $nagios_maxmem = to_bytes($maxmemory)
+      $nagios_maxmem = to_bytes(upcase($maxmemory))
     } else {
       $nagios_maxmem = to_bytes($::memorysize)
     }
