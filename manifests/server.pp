@@ -155,7 +155,7 @@ define redis::server (
       Class['redis'],
       File["${redis::params::conf_dir}/${name}.conf"],
       File["${redis::params::init_dir}/redis-${name}"],
-      File["${dir}"],
+      File[$dir],
     ],
   }
 
@@ -171,10 +171,10 @@ define redis::server (
 
     @@nagios_service { "check_redis_memory_${name}":
       check_command       => "check_redis!used_memory!${port}!${requirepass}!${redis::params::nagios_check_timeout}!${mem_warn}!${mem_crit}",
-      host_name           => "${::hostname}",
-      service_description => "${redis::params::nagios_service_description}",
-      servicegroups       => "${redis::params::nagios_servicegroups}",
-      use                 => "${redis::params::nagios_use}",
+      host_name           => $::hostname,
+      service_description => $redis::params::nagios_service_description,
+      servicegroups       => $redis::params::nagios_servicegroups,
+      use                 => $redis::params::nagios_use,
     }
   }
 }
