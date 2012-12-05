@@ -167,9 +167,9 @@ define redis::server (
       $nagios_maxmem = to_bytes($::memorysize)
     }
     $mem_warn = ($nagios_maxmem * $redis::params::nagios_mem_warn_percent) / 100
-    $mem_crit = ($nagios_maxmem * $redis::params::nagios_mem_warn_percent) / 100
+    $mem_crit = ($nagios_maxmem * $redis::params::nagios_mem_crit_percent) / 100
 
-    @@nagios_service { "check_redis_memory_${name}":
+    @@nagios_service { "check_redis_memory_${::hostname}_${name}":
       check_command       => "check_redis!used_memory!${port}!${requirepass}!${redis::params::nagios_check_timeout}!${mem_warn}!${mem_crit}",
       host_name           => $::hostname,
       service_description => $redis::params::nagios_service_description,
