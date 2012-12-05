@@ -11,6 +11,15 @@
 # Jonathan Thurman <jthurman@newrelic.com>
 #
 class redis::params {
+  # Generic settings
+  $nagios_check_timeout       = 5   # Seconds
+  $nagios_service_description = 'redis'
+  $nagios_servicegroups       = 'redis'
+  $nagios_use                 = 'critical-service'
+  $nagios_mem_warn_percent    = 75
+  $nagios_mem_crit_percent    = 90
+
+  # OS Specific
   case $::osfamily {
     redhat: {
       $package        = 'redis'

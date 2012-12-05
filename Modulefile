@@ -9,3 +9,5 @@ project_page 'https://github.com/newrelic/puppet-redis'
 
 ## Add dependencies, if any:
 # dependency 'username/name', '>= 1.2.0'
+dependency 'puppetlabs/stdlib', '>= 3.1.1'
+

@@ -22,11 +22,11 @@
 # [*repl_ping_slave_period*]      - 
 # [*repl_timeout*]                - 
 # [*slave_priority*]              - 
-# [*requirepass*]                 - 
+# [*requirepass*]                 - Set a password that clients must use when connecting
 # [*rename_command*]              - Array of redis rename-command directive (ie ['CONFIG ""', 'INFO "mycustominfocommandname"']) Use <cmdname> "" to disable a command.
 # [*maxclients*]                  - 
-# [*maxmemory*]                   - 
-# [*maxmemory_policy*]            - 
+# [*maxmemory*]                   - Set maximum memory for redis to use.
+# [*maxmemory_policy*]            - Define what redis does when out of memory and you insert a key.
 # [*maxmemory_samples*]           - 
 # [*appendonly*]                  - 
 # [*appendfsync*]                 - 
@@ -44,6 +44,7 @@
 # [*zset_max_ziplist_entries*]    - 
 # [*zset_max_ziplist_value*]      - 
 # [*activerehashing*]             - 
+# [*nagios_check*]                - Enable nagios health checks (Requires nagios check_redis plugin found here: git@github.com:shift/nagios-check-redis.git )
 # [*client_output_buffer_limit*]  - 
 #
 # === Examples
@@ -102,6 +103,7 @@ define redis::server (
   $zset_max_ziplist_entries    = 128,
   $zset_max_ziplist_value      = 64,
   $activerehashing             = 'yes',
+  $nagios_check                = false,
   $client_output_buffer_limit  = ['normal 0 0 0', 'slave 256mb 64mb 60', 'pubsub 32mb 8mb 60']
 ) {
   include redis::params
@@ -157,4 +159,22 @@ define redis::server (
     ],
   }
 
+  if $nagios_check {
+    # Calculate percentages based on either the maxmemory setting or total system memory
+    if $maxmemory {
+      $nagios_maxmem = to_bytes($maxmemory)
+    } else {
+      $nagios_maxmem = to_bytes($::memorysize)
+    }
+    $mem_warn = ($nagios_maxmem * $redis::params::nagios_mem_warn_percent) / 100
+    $mem_crit = ($nagios_maxmem * $redis::params::nagios_mem_warn_percent) / 100
+
+    @@nagios_service { "check_redis_memory_${name}":
+      check_command       => "check_redis!used_memory!${port}!${requirepass}!${redis::params::nagios_check_timeout}!${mem_warn}!${mem_crit}",
+      host_name           => "${::hostname}",
+      service_description => "${redis::params::nagios_service_description}",
+      servicegroups       => "${redis::params::nagios_servicegroups}",
+      use                 => "${redis::params::nagios_use}",
+    }
+  }
 }
