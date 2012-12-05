@@ -172,7 +172,7 @@ define redis::server (
     @@nagios_service { "check_redis_memory_${::hostname}_${name}":
       check_command       => "check_redis!used_memory!${port}!${requirepass}!${redis::params::nagios_check_timeout}!${mem_warn}!${mem_crit}",
       host_name           => $::hostname,
-      service_description => $redis::params::nagios_service_description,
+      service_description => "${redis::params::nagios_service_description}_memory_${name}",
       servicegroups       => $redis::params::nagios_servicegroups,
       use                 => $redis::params::nagios_use,
     }
