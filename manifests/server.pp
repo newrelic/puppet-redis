@@ -4,6 +4,8 @@
 #
 # === Parameters
 #
+# [*ensure*]                      - What state to ensure the service is in. Default running.
+# [*enable*]                      - Whether to start the service on boot. Default true.
 # [*bind*]                        - IP Address to bind the service
 # [*port*]                        - Port to bind the service
 # [*package_version*]             - Package version or puppet string (ie present/latest)
@@ -59,6 +61,7 @@
 #
 define redis::server (
   $ensure                      = 'running',
+  $enable                      = 'true',
   $daemonize                   = 'yes',
   $bind                        = '127.0.0.1',
   $port                        = '6379',
@@ -148,7 +151,8 @@ define redis::server (
   }
 
   service { "${redis::params::service}-${name}":
-    ensure     => 'running',
+    ensure     => $ensure,
+    enable     => $enable,
     hasrestart => true,
     hasstatus  => true,
     require    => [
