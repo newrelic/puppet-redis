@@ -9,7 +9,7 @@
 . /etc/rc.d/init.d/functions
 
 name="redis-server"
-exec="/usr/sbin/$name"
+exec=$(/usr/bin/which ${name})
 pidfile="<%= @pidfile %>"
 REDIS_CONFIG="<%= @config_file %>"
 
